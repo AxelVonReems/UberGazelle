@@ -1,10 +1,13 @@
 from flask_admin.contrib.sqla import ModelView
-from wtforms import SelectMultipleField
+from wtforms import SelectMultipleField, validators
 
 from regions import REGIONS
 
 
 class MultipleSelect(SelectMultipleField):
+
+    def pre_validate(self, form):
+        pass
 
     def process_formdata(self, valuelist):
         if valuelist:
@@ -20,5 +23,9 @@ class DriversAdmin(ModelView):
         'work_regions': 'Work Regions',
         'vehicle_type': 'Vehicle Type'
         }
-    form_args = {'work_regions': {'render_kw': {"multiple": "multiple"}}}
-    form_choices = {'work_regions': REGIONS}
+    form_extra_fields = {
+        'work_regions': MultipleSelect(
+            'Work Regions', [validators.DataRequired()], choices=REGIONS,
+            render_kw={"multiple": "multiple"}, coerce=int
+            )
+            }
