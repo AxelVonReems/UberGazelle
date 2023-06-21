@@ -165,7 +165,8 @@ cython_debug/
 # MacOS
 .DS_Store
 
-# Configurations
+# Configurations and secrets
+secrets_tokens.py
 config.py
 
 # Databases
