@@ -1,6 +1,6 @@
-from ubergazelle import db, app
-from ubergazelle.models import Regions
-from ubergazelle.regions import region_list
+from ubergazelle_flask import db, app
+from ubergazelle_flask.models import Regions
+from ubergazelle_flask.regions import region_list
 
 with app.app_context():
     db.create_all()
