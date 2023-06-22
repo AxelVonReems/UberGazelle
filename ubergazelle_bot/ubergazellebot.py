@@ -25,7 +25,6 @@ secret_token = BOT_SECRET_TOKEN
 NEW_ORDER_TEXT = 'Создать заказ'
 NEW_DRIVER_TEXT = 'Зарегистрироваться как водитель'
 DELETE_DRIVER_TEXT = 'Удалить учетную запись'
-WEIGHT_TEXT = 'Масса груза'
 
 BUTTONS = [
     [KeyboardButton(NEW_ORDER_TEXT)],
@@ -51,7 +50,6 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def new_order(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat = update.effective_chat
-    # user_name = update.effective_chat.first_name
     await context.bot.send_message(
         chat_id=chat.id,
         text=(
