@@ -72,7 +72,8 @@ async def driver_summary(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def driver_unknown(update: Update, context: ContextTypes.DEFAULT_TYPE):
     unknown_answer = ('''
-Я вас не понимаю. Пожалуйста, следуйте моим подсказкам при создании профиля.
+Я вас не понимаю. Пожалуйста, используйте кнопки экранной клавиатуры при
+создании профиля.
     ''')
     await update.message.reply_text(
         text=unknown_answer

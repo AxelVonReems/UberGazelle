@@ -12,7 +12,7 @@ from ug_drivers import (
     driver_regions, driver_start, driver_summary, driver_vehicle,
     driver_unknown
 )
-from utils import intro_keyboard, vehicle_types
+from utils import intro_keyboard, vehicle_types, region_list
 from secrets_tokens import BOT_SECRET_TOKEN
 
 # load_dotenv()
@@ -74,17 +74,21 @@ def main():
             filters.Regex('^(Зарегистрироваться как водитель)$'), driver_start
             )],
         states={
-            'driver_id': [MessageHandler(filters.TEXT, driver_regions)],
+            'driver_id': [
+                MessageHandler(filters.Text('Продолжить'), driver_regions)
+            ],
             'regions': [
-                MessageHandler(filters.TEXT, driver_vehicle)
+                MessageHandler(filters.Text(region_list), driver_vehicle)
             ],
             'vehicle_types': [
-                MessageHandler(filters.Text(vehicle_types), driver_summary)
+                MessageHandler(filters.TEXT, driver_summary)
             ],
-            'driver_summary': [MessageHandler(filters.TEXT, driver_summary)]
+            'driver_summary': [
+                MessageHandler(filters.Text(vehicle_types), driver_summary)
+            ]
         },
         fallbacks=[MessageHandler(
-            filters.Text | filters.Document, driver_unknown
+            filters.TEXT, driver_unknown
             )
         ],
     )

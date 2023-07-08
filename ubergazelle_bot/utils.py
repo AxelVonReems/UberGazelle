@@ -9,6 +9,11 @@ intro_keyboard = [
     [KeyboardButton(NEW_DRIVER_TEXT), KeyboardButton(DELETE_DRIVER_TEXT)],
     ]
 
+region_list = [
+    'Санкт-Петербург', 'Ленинградская область', 'Псковская область',
+    'Новгородская область'
+]
+
 REGION_1 = 'Санкт-Петербург'
 REGION_2 = 'Ленинградская область'
 REGION_3 = 'Псковская область'
