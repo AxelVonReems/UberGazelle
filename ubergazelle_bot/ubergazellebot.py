@@ -12,6 +12,12 @@ from ug_drivers import (
     driver_regions, driver_start, driver_summary, driver_vehicle,
     driver_unknown
 )
+from ug_neworder import (
+    order_delivery_address, order_delivery_region, order_description,
+    order_height, order_length, order_pickup_address, order_pickup_region,
+    order_start, order_summary, order_weight, order_width, order_vehicle_type,
+    order_unknown
+)
 from utils import intro_keyboard, vehicle_types, region_list
 from secrets_tokens import BOT_SECRET_TOKEN
 
@@ -45,13 +51,11 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
             )
 
 
-async def new_order(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def kifflom(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat = update.effective_chat
     await context.bot.send_message(
-        chat_id=chat.id,
-        text=(
-            'Для создания заказа вводите данные в соответствии с '
-            'моими подсказками.'
+        chat_id=chat.id, text=(
+            'Kifflom! the tract is not yet written!'
         )
     )
 
@@ -59,8 +63,7 @@ async def new_order(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def delete_driver(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat = update.effective_chat
     await context.bot.send_message(
-        chat_id=chat.id,
-        text=(
+        chat_id=chat.id, text=(
             'Для удаления своей учетной записи следуйте моим подсказкам.'
         )
     )
@@ -68,6 +71,54 @@ async def delete_driver(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 def main():
     application = ApplicationBuilder().token(secret_token).build()
+
+    create_order = ConversationHandler(
+        entry_points=[MessageHandler(
+            filters.Regex('^(Создать заказ)$'), order_start
+            )],
+        states={
+            'order_weight': [
+                MessageHandler(filters.Text('Продолжить'), order_weight)
+            ],
+            'order_length': [
+                MessageHandler(filters.Regex('^\\d+$'), order_length)
+            ],
+            'order_width': [
+                MessageHandler(filters.Regex('^\\d+$'), order_width)
+            ],
+            'order_height': [
+                MessageHandler(filters.Regex('^\\d+$'), order_height)
+            ],
+            'order_pickup_region': [
+                MessageHandler(filters.Regex('^\\d+$'), order_pickup_region)
+            ],
+            'order_pickup_address': [
+                MessageHandler(filters.Text(region_list), order_pickup_address)
+            ],
+            'order_delivery_region': [MessageHandler(
+                filters.TEXT, order_delivery_region
+            )],
+            'order_delivery_address': [MessageHandler(
+                filters.Text(region_list), order_delivery_address
+            )],
+            'order_vehicle_type': [
+                MessageHandler(filters.TEXT, order_vehicle_type)
+            ],
+            'order_description': [
+                MessageHandler(filters.Text(vehicle_types), order_description)
+            ],
+            'order_summary': [
+                MessageHandler(filters.TEXT, order_summary)
+            ],
+        },
+        fallbacks=[
+            MessageHandler(
+                filters.TEXT | filters.Regex('^\\d+$') |
+                filters.Text(region_list) | filters.Text(vehicle_types),
+                order_unknown
+            )
+        ],
+    )
 
     create_driver = ConversationHandler(
         entry_points=[MessageHandler(
@@ -87,21 +138,23 @@ def main():
                 MessageHandler(filters.Text(vehicle_types), driver_summary)
             ]
         },
-        fallbacks=[MessageHandler(
-            filters.TEXT, driver_unknown
-            )
-        ],
+        fallbacks=[MessageHandler(filters.TEXT, driver_unknown)],
     )
-
-    application.add_handler(create_driver)
 
     application.add_handler(CommandHandler('start', start))
-    application.add_handler(
-        MessageHandler(filters.Regex('^(Создать заказ)$'), new_order)
-    )
+
+    application.add_handler(create_order)
+    application.add_handler(create_driver)
+
     application.add_handler(
         MessageHandler(
             filters.Regex('^(Удалить учетную запись)$'), delete_driver
+        )
+    )
+
+    application.add_handler(
+        MessageHandler(
+            filters.Regex('^(Kifflom!)$'), kifflom
         )
     )
 
